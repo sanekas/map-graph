@@ -1,4 +1,4 @@
-package roadgraph;
+package roadgraph.graphsenities;
 
 
 public class MapEdge {
