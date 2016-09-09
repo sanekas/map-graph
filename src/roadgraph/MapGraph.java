@@ -9,7 +9,6 @@ package roadgraph;
 
 
 import geography.GeographicPoint;
-import geography.RoadSegment;
 import util.GraphLoader;
 
 import java.util.*;
@@ -24,7 +23,7 @@ import java.util.function.Consumer;
  */
 public class MapGraph {
 	//TODO: Add your member variables here in WEEK 2
-	private Map<GeographicPoint, List<RoadSegment>> graph;
+	private Map<MapNode, List<MapEdge>> graph;
 
 	
 	/** 
@@ -53,7 +52,11 @@ public class MapGraph {
 	public Set<GeographicPoint> getVertices()
 	{
 		//TODO: Implement this method in WEEK 2
-		return graph.keySet();
+		Set<GeographicPoint> vertices = new HashSet<>();
+		for (MapNode node : graph.keySet()) {
+			vertices.add(node.getLocation());
+		}
+		return vertices;
 	}
 	
 	/**
@@ -64,7 +67,7 @@ public class MapGraph {
 	{
 		//TODO: Implement this method in WEEK 2
 		int numOfEdges = 0;
-		for (Map.Entry<GeographicPoint, List<RoadSegment>> entry : graph.entrySet()) {
+		for (Map.Entry<MapNode, List<MapEdge>> entry : graph.entrySet()) {
 			numOfEdges += entry.getValue().size();
 		}
 		return numOfEdges;
@@ -82,10 +85,11 @@ public class MapGraph {
 	public boolean addVertex(GeographicPoint location)
 	{
 		// TODO: Implement this method in WEEK 2
-		if (location == null || graph.containsKey(location)) {
+		MapNode node = new MapNode(location);
+		if (location == null || graph.containsKey(node)) {
 			return false;
 		} else {
-			graph.put(location, new ArrayList<>());
+			graph.put(node, new ArrayList<>());
 			return true;
 		}
 	}
@@ -105,13 +109,15 @@ public class MapGraph {
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		//TODO: Implement this method in WEEK 2
-		if (!graph.containsKey(from) || !graph.containsKey(to) || from == null || to == null
+		MapNode fromNode = new MapNode(from);
+		MapNode toNode = new MapNode(to);
+		if (!graph.containsKey(fromNode) || !graph.containsKey(toNode) || from == null || to == null
 				|| roadType == null || length < 0) {
 			throw new IllegalArgumentException();
 		}
-		RoadSegment roadSegment = new RoadSegment(from, to, new ArrayList<>(), roadName, roadType, length);
-		if (!graph.get(from).contains(roadSegment)) {
-			graph.get(from).add(roadSegment);
+		MapEdge edge = new MapEdge(fromNode, toNode, roadName, roadType, length);
+		if (!graph.get(fromNode).contains(edge)) {
+			graph.get(fromNode).add(edge);
 		}
 	}
 	
@@ -141,11 +147,14 @@ public class MapGraph {
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 2
-		if (start.equals(goal)) {
+		MapNode startNode = new MapNode(start);
+		MapNode goalNode = new MapNode(goal);
+
+		if (startNode.equals(goalNode)) {
 			return new ArrayList<>();
 		}
 		List<GeographicPoint> result = new ArrayList<>();
-		boolean founded  = bfsSearch(result, start, goal, nodeSearched);
+		boolean founded  = bfsSearch(result, startNode, goalNode, nodeSearched);
 		if (founded) {
 			return result;
 		} else {
@@ -164,33 +173,33 @@ public class MapGraph {
 	 * @return founded
 	 */
 
-	private boolean bfsSearch(List<GeographicPoint> result, GeographicPoint start, GeographicPoint goal,
+	private boolean bfsSearch(List<GeographicPoint> result, MapNode start, MapNode goal,
 							  Consumer<GeographicPoint> nodeSearched) {
-		Queue<GeographicPoint> queue = new LinkedList<>();
-		Set<GeographicPoint> visitedVertices = new HashSet<>();
+		Queue<MapNode> queue = new LinkedList<>();
+		Set<MapNode> visitedVertices = new HashSet<>();
 		Map<GeographicPoint, GeographicPoint> parentMap = new HashMap<>();
 		visitedVertices.add(start);
 		queue.add(start);
-		nodeSearched.accept(start);
+		nodeSearched.accept(start.getLocation());
 		boolean founded = false;
 		while (!queue.isEmpty()) {
-			GeographicPoint current = queue.remove();
+			MapNode current = queue.remove();
 			if (current.equals(goal)) {
 				founded = true;
 				break;
 			} else {
-				for (RoadSegment segment : graph.get(current)) {
-					GeographicPoint neighbour = segment.getOtherPoint(current);
+				for (MapEdge edge : graph.get(current)) {
+					MapNode neighbour = edge.getOtherNode(current);
 					if (!visitedVertices.contains(neighbour)) {
 						queue.add(neighbour);
 						visitedVertices.add(neighbour);
-						parentMap.put(neighbour, current);
-						nodeSearched.accept(neighbour);
+						parentMap.put(neighbour.getLocation(), current.getLocation());
+						nodeSearched.accept(neighbour.getLocation());
 					}
 				}
 			}
 		}
-		constructPath(parentMap, result, goal);
+		constructPath(parentMap, result, goal.getLocation());
 		return founded;
 	}
 
@@ -235,6 +244,7 @@ public class MapGraph {
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 3
+
 
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
