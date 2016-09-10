@@ -35,10 +35,11 @@ public class DijkstraSearchAlgorithm {
                 }
                 for (MapEdge edge : graph.get(currentNode)) {
                     MapNode neighbour = edge.getOtherNode(currentNode);
-                    if (!visitedNodes.contains(neighbour) && neighbour.getWeight() > (currentNode.getWeight() + neighbour.getDist(currentNode))) {
-                        neighbour.setWeight(currentNode.getWeight() + neighbour.getDist(currentNode));
-                        queue.add(neighbour);
+                    double newWeight = currentNode.getWeight() + edge.getLength();
+                    if (!visitedNodes.contains(neighbour) && neighbour.getWeight() > newWeight) {
+                        neighbour.setWeight(newWeight);
                         parentMap.put(neighbour, currentNode);
+                        queue.add(neighbour);
                     }
                 }
 
@@ -62,6 +63,7 @@ public class DijkstraSearchAlgorithm {
             result.add(node.getLocation());
         }
         Collections.reverse(result);
+        System.out.println(directions);
         return result;
     }
 }

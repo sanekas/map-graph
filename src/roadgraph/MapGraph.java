@@ -26,6 +26,9 @@ import java.util.function.Consumer;
 public class MapGraph {
 	//TODO: Add your member variables here in WEEK 2
 	private Map<MapNode, List<MapEdge>> graph;
+	private Map<GeographicPoint, MapNode> pointNodeMap;
+
+	private int numEdges;
 
 	
 	/** 
@@ -35,6 +38,8 @@ public class MapGraph {
 	{
 		// TODO: Implement in this constructor in WEEK 2
 		graph = new HashMap<>();
+		pointNodeMap = new HashMap<>();
+		numEdges = 0;
 	}
 	
 	/**
@@ -54,11 +59,7 @@ public class MapGraph {
 	public Set<GeographicPoint> getVertices()
 	{
 		//TODO: Implement this method in WEEK 2
-		Set<GeographicPoint> vertices = new HashSet<>();
-		for (MapNode node : graph.keySet()) {
-			vertices.add(node.getLocation());
-		}
-		return vertices;
+		return pointNodeMap.keySet();
 	}
 	
 	/**
@@ -68,11 +69,7 @@ public class MapGraph {
 	public int getNumEdges()
 	{
 		//TODO: Implement this method in WEEK 2
-		int numOfEdges = 0;
-		for (Map.Entry<MapNode, List<MapEdge>> entry : graph.entrySet()) {
-			numOfEdges += entry.getValue().size();
-		}
-		return numOfEdges;
+		return numEdges;
 	}
 
 	
@@ -87,10 +84,11 @@ public class MapGraph {
 	public boolean addVertex(GeographicPoint location)
 	{
 		// TODO: Implement this method in WEEK 2
-		MapNode node = new MapNode(location);
-		if (location == null || graph.containsKey(node)) {
+		if (location == null || pointNodeMap.containsKey(location)) {
 			return false;
 		} else {
+			MapNode node = new MapNode(location);
+			pointNodeMap.put(location, node);
 			graph.put(node, new ArrayList<>());
 			return true;
 		}
@@ -111,14 +109,15 @@ public class MapGraph {
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 		//TODO: Implement this method in WEEK 2
-		MapNode fromNode = new MapNode(from);
-		MapNode toNode = new MapNode(to);
-		if (!graph.containsKey(fromNode) || !graph.containsKey(toNode) || from == null || to == null
+		if (!pointNodeMap.containsKey(from) || !pointNodeMap.containsKey(to) || from == null || to == null
 				|| roadType == null || length < 0) {
 			throw new IllegalArgumentException();
 		}
+		MapNode fromNode = pointNodeMap.get(from);
+		MapNode toNode = pointNodeMap.get(to);
 		MapEdge edge = new MapEdge(fromNode, toNode, roadName, roadType, length);
 		if (!graph.get(fromNode).contains(edge)) {
+			numEdges++;
 			graph.get(fromNode).add(edge);
 		}
 	}
