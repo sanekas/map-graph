@@ -48,12 +48,4 @@ public class MapNode implements Comparable<MapNode> {
     public int compareTo(MapNode o) {
         return weight.compareTo(o.getWeight());
     }
-
-    @Override
-    public String toString() {
-        return "MapNode{" +
-                "location=" + location +
-                ", weight=" + weight +
-                '}';
-    }
 }
