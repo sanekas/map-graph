@@ -53,7 +53,6 @@ public class MapNode implements Comparable<MapNode> {
     public String toString() {
         return "MapNode{" +
                 "location=" + location +
-                ", weight=" + weight +
                 '}';
     }
 }
