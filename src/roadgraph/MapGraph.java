@@ -11,6 +11,10 @@ package roadgraph;
 import geography.GeographicPoint;
 import roadgraph.graphsenities.MapEdge;
 import roadgraph.graphsenities.MapNode;
+import roadgraph.searchalgorithms.api.SearchAlgo;
+import roadgraph.searchalgorithms.api.Searcher;
+import roadgraph.searchalgorithms.impl.BFSAlgo;
+import roadgraph.searchalgorithms.impl.DijkstraAlgo;
 import util.GraphLoader;
 
 import java.util.*;
@@ -148,76 +152,12 @@ public class MapGraph {
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 2
-		MapNode startNode = new MapNode(start);
-		MapNode goalNode = new MapNode(goal);
-
-		if (startNode.equals(goalNode)) {
-			return new ArrayList<>();
-		}
-		List<GeographicPoint> result = new ArrayList<>();
-		boolean founded  = bfsSearch(result, startNode, goalNode, nodeSearched);
-		if (founded) {
-			return result;
-		} else {
-			return null;
-		}
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
+		MapNode startNode = pointNodeMap.get(start);
+		MapNode goalNode = pointNodeMap.get(goal);
+		Searcher bfsSearcher = new BFSAlgo(new HashMap<>(graph));
+		return bfsSearcher.search(startNode, goalNode, nodeSearched);
 	}
 
-	/** Helps to determine if path from one node to another exists
-	 *
-	 * @param result
-	 * @param start
-	 * @param goal
-	 * @param nodeSearched
-	 * @return founded
-	 */
-
-	private boolean bfsSearch(List<GeographicPoint> result, MapNode start, MapNode goal,
-							  Consumer<GeographicPoint> nodeSearched) {
-		Queue<MapNode> queue = new LinkedList<>();
-		Set<MapNode> visitedVertices = new HashSet<>();
-		Map<GeographicPoint, GeographicPoint> parentMap = new HashMap<>();
-		visitedVertices.add(start);
-		queue.add(start);
-		nodeSearched.accept(start.getLocation());
-		boolean founded = false;
-		while (!queue.isEmpty()) {
-			MapNode current = queue.remove();
-			if (current.equals(goal)) {
-				founded = true;
-				break;
-			} else {
-				for (MapEdge edge : graph.get(current)) {
-					MapNode neighbour = edge.getOtherNode(current);
-					if (!visitedVertices.contains(neighbour)) {
-						queue.add(neighbour);
-						visitedVertices.add(neighbour);
-						parentMap.put(neighbour.getLocation(), current.getLocation());
-						nodeSearched.accept(neighbour.getLocation());
-					}
-				}
-			}
-		}
-		constructPath(parentMap, result, goal.getLocation());
-		return founded;
-	}
-
-	/**
-	 * Constructs shortest path based on trail
-	 * @param directions
-	 * @param result
-	 * @param goal
-	 */
-
-	private void constructPath(Map<GeographicPoint, GeographicPoint> directions,
-							   List<GeographicPoint> result, GeographicPoint goal) {
-		for(GeographicPoint node = goal; node != null; node = directions.get(node)) {
-			result.add(node);
-		}
-		Collections.reverse(result);
-	}
 
 	/** Find the path from start to goal using Dijkstra's algorithm
 	 * 
@@ -242,15 +182,12 @@ public class MapGraph {
 	 *   start to goal (including both start and goal).
 	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
-										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
+										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
 		// TODO: Implement this method in WEEK 3
-		MapNode startNode = new MapNode(start);
-		MapNode goalNode = new MapNode(goal);
-		DijkstraSearchAlgorithm algorithm = new DijkstraSearchAlgorithm(new HashMap<>(graph));
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
-		return algorithm.dijkstraSearch(startNode, goalNode, nodeSearched);
+		MapNode startNode = pointNodeMap.get(start);
+		MapNode goalNode = pointNodeMap.get(goal);
+		SearchAlgo algorithm = new DijkstraAlgo(new HashMap<>(graph));
+		return algorithm.search(startNode, goalNode, nodeSearched);
 	}
 
 
@@ -313,7 +250,7 @@ public class MapGraph {
 		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
 		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
 
-		System.out.println("Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5");
+		System.out.println("Test 1 using simpletest: DijkstraAlgo should be 9 and AStarAlgo should be 5");
 		List<GeographicPoint> testroute = simpleTestMap.dijkstra(testStart,testEnd);
 		List<GeographicPoint> testroute2 = simpleTestMap.aStarSearch(testStart,testEnd);
 
@@ -324,7 +261,7 @@ public class MapGraph {
 		// A very simple test using real data
 		testStart = new GeographicPoint(32.869423, -117.220917);
 		testEnd = new GeographicPoint(32.869255, -117.216927);
-		System.out.println("Test 2 using utc: Dijkstra should be 13 and AStar should be 5");
+		System.out.println("Test 2 using utc: DijkstraAlgo should be 13 and AStarAlgo should be 5");
 		testroute = testMap.dijkstra(testStart,testEnd);
 		testroute2 = testMap.aStarSearch(testStart,testEnd);
 
@@ -332,7 +269,7 @@ public class MapGraph {
 		// A slightly more complex test using real data
 		testStart = new GeographicPoint(32.8674388, -117.2190213);
 		testEnd = new GeographicPoint(32.8697828, -117.2244506);
-		System.out.println("Test 3 using utc: Dijkstra should be 37 and AStar should be 10");
+		System.out.println("Test 3 using utc: DijkstraAlgo should be 37 and AStarAlgo should be 10");
 		testroute = testMap.dijkstra(testStart,testEnd);
 		testroute2 = testMap.aStarSearch(testStart,testEnd);
 

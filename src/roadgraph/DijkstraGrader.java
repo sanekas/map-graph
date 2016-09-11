@@ -1,17 +1,9 @@
 package roadgraph;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.function.Consumer;
+import geography.GeographicPoint;
 import util.GraphLoader;
-import geography.*;
+
+import java.util.List;
 
 /**
  * @author UCSD MOOC Development Team
@@ -82,7 +74,7 @@ public class DijkstraGrader implements Runnable {
      */
     public void judge(int i, MapGraph result, CorrectAnswer corr, GeographicPoint start, GeographicPoint end) {
         // Correct if paths are same length and have the same elements
-        feedback += appendFeedback(i, "Running Dijkstra's algorithm from (" + start.getX() + ", " + start.getY() + ") to (" + end.getX() + ", " + end.getY() + ")");
+        feedback += appendFeedback(i, "Running DijkstraAlgo's algorithm from (" + start.getX() + ", " + start.getY() + ") to (" + end.getX() + ", " + end.getY() + ")");
         List<GeographicPoint> path = result.dijkstra(start, end);
         if (path == null) {
             if (corr.path == null) {

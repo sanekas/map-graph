@@ -326,9 +326,9 @@ implements MapComponentInitializedListener {
 
 	private LinkedList<RadioButton> setupToggle(ToggleGroup group) {
 
-		// Use Dijkstra as default
-		RadioButton rbD = new RadioButton("Dijkstra");
-		rbD.setUserData("Dijkstra");
+		// Use DijkstraAlgo as default
+		RadioButton rbD = new RadioButton("DijkstraAlgo");
+		rbD.setUserData("DijkstraAlgo");
 		rbD.setSelected(true);
 
 		RadioButton rbA = new RadioButton("A*");

@@ -132,7 +132,7 @@ public class RouteController {
 
     private void setupToggle() {
     	group.selectedToggleProperty().addListener( li -> {
-            if(group.getSelectedToggle().getUserData().equals("Dijkstra")) {
+            if(group.getSelectedToggle().getUserData().equals("DijkstraAlgo")) {
             	selectedToggle = DIJ;
             }
             else if(group.getSelectedToggle().getUserData().equals("A*")) {
