@@ -11,8 +11,8 @@ package roadgraph;
 import geography.GeographicPoint;
 import roadgraph.graphsenities.MapEdge;
 import roadgraph.graphsenities.MapNode;
-import roadgraph.searchalgorithms.api.SearchAlgo;
-import roadgraph.searchalgorithms.api.Searcher;
+import roadgraph.searchalgorithms.api.Algorithm;
+import roadgraph.searchalgorithms.impl.AStarAlgo;
 import roadgraph.searchalgorithms.impl.BFSAlgo;
 import roadgraph.searchalgorithms.impl.DijkstraAlgo;
 import util.GraphLoader;
@@ -32,7 +32,7 @@ public class MapGraph {
 	private Map<MapNode, List<MapEdge>> graph;
 	private Map<GeographicPoint, MapNode> pointNodeMap;
 
-	private int numEdges;
+	private int numOfEdges;
 
 	
 	/** 
@@ -43,7 +43,7 @@ public class MapGraph {
 		// TODO: Implement in this constructor in WEEK 2
 		graph = new HashMap<>();
 		pointNodeMap = new HashMap<>();
-		numEdges = 0;
+		numOfEdges = 0;
 	}
 	
 	/**
@@ -70,10 +70,10 @@ public class MapGraph {
 	 * Get the number of road segments in the graph
 	 * @return The number of edges in the graph.
 	 */
-	public int getNumEdges()
+	public int getNumOfEdges()
 	{
 		//TODO: Implement this method in WEEK 2
-		return numEdges;
+		return numOfEdges;
 	}
 
 	
@@ -121,9 +121,27 @@ public class MapGraph {
 		MapNode toNode = pointNodeMap.get(to);
 		MapEdge edge = new MapEdge(fromNode, toNode, roadName, roadType, length);
 		if (!graph.get(fromNode).contains(edge)) {
-			numEdges++;
+			numOfEdges++;
 			graph.get(fromNode).add(edge);
 		}
+	}
+
+	private List<GeographicPoint> executeAlgorithm(GeographicPoint start,
+								  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched, Algorithm algorithm) {
+		Map<MapNode, List<MapEdge>> copyOfGraph = new HashMap<>();
+		MapNode startNode = pointNodeMap.get(start);
+		MapNode goalNode = pointNodeMap.get(goal);
+ 		switch (algorithm) {
+			case BFS: return new BFSAlgo(copyOfGraph)
+					.search(startNode, goalNode, nodeSearched);
+
+			case DIJKSTRA: return new DijkstraAlgo(copyOfGraph)
+					.search(startNode, goalNode, nodeSearched);
+
+			case ASTAR: return new AStarAlgo(copyOfGraph)
+					.search(startNode, goalNode, nodeSearched);
+		}
+		return null;
 	}
 	
 
@@ -152,10 +170,7 @@ public class MapGraph {
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 2
-		MapNode startNode = pointNodeMap.get(start);
-		MapNode goalNode = pointNodeMap.get(goal);
-		Searcher bfsSearcher = new BFSAlgo(new HashMap<>(graph));
-		return bfsSearcher.search(startNode, goalNode, nodeSearched);
+		return executeAlgorithm(start, goal, nodeSearched, Algorithm.BFS);
 	}
 
 
@@ -184,10 +199,8 @@ public class MapGraph {
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
 		// TODO: Implement this method in WEEK 3
-		MapNode startNode = pointNodeMap.get(start);
-		MapNode goalNode = pointNodeMap.get(goal);
-		SearchAlgo algorithm = new DijkstraAlgo(new HashMap<>(graph));
-		return algorithm.search(startNode, goalNode, nodeSearched);
+		return executeAlgorithm(start, goal, nodeSearched, Algorithm.DIJKSTRA);
+
 	}
 
 
@@ -219,11 +232,7 @@ public class MapGraph {
 											 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 3
-		
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
-		
-		return null;
+		return executeAlgorithm(start, goal, nodeSearched, Algorithm.ASTAR);
 	}
 
 	

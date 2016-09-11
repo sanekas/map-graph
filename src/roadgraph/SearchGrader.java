@@ -1,14 +1,7 @@
 package roadgraph;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
+
 import util.GraphLoader;
 import geography.*;
 
@@ -93,8 +86,8 @@ public class SearchGrader implements Runnable {
 
         // Correct if same number of edges
         feedback += appendFeedback(i * 3 - 1, "Testing edge count");
-        if (result.getNumEdges() != corr.edges) {
-            feedback += "FAILED. Expected " + corr.edges + "; got " + result.getNumEdges() + ".";
+        if (result.getNumOfEdges() != corr.edges) {
+            feedback += "FAILED. Expected " + corr.edges + "; got " + result.getNumOfEdges() + ".";
         } else {
             feedback += "PASSED.";
             correct++;

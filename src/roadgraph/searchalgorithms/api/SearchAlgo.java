@@ -23,7 +23,7 @@ public abstract class SearchAlgo implements Searcher {
 
 
 
-    public abstract boolean findPath(MapNode startNode, MapNode goalNode,
+    protected abstract boolean findPath(MapNode startNode, MapNode goalNode,
                                      Consumer<GeographicPoint> nodeSearched, List<GeographicPoint> result);
 
     public List<GeographicPoint> search(MapNode startNode, MapNode goalNode,
