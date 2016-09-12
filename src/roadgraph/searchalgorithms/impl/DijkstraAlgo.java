@@ -53,12 +53,4 @@ public class DijkstraAlgo extends SearchAlgo {
             return false;
         }
     }
-
-    private void constructPrimaryWeightedGraph(MapNode startNode) {
-        for (Map.Entry<MapNode, List<MapEdge>> entry : graph.entrySet()) {
-            if (entry.getKey().equals(startNode)) {
-                entry.getKey().setWeight(0.0);
-            }
-        }
-    }
 }

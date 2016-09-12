@@ -11,7 +11,7 @@ package roadgraph;
 import geography.GeographicPoint;
 import roadgraph.graphsenities.MapEdge;
 import roadgraph.graphsenities.MapNode;
-import roadgraph.searchalgorithms.api.Algorithm;
+import roadgraph.searchalgorithms.api.SearchAlgo;
 import roadgraph.searchalgorithms.impl.AStarAlgo;
 import roadgraph.searchalgorithms.impl.BFSAlgo;
 import roadgraph.searchalgorithms.impl.DijkstraAlgo;
@@ -127,21 +127,10 @@ public class MapGraph {
 	}
 
 	private List<GeographicPoint> executeAlgorithm(GeographicPoint start,
-								  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched, Algorithm algorithm) {
-		Map<MapNode, List<MapEdge>> copyOfGraph = new HashMap<>();
+								  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched, SearchAlgo algorithm) {
 		MapNode startNode = pointNodeMap.get(start);
 		MapNode goalNode = pointNodeMap.get(goal);
- 		switch (algorithm) {
-			case BFS: return new BFSAlgo(copyOfGraph)
-					.search(startNode, goalNode, nodeSearched);
-
-			case DIJKSTRA: return new DijkstraAlgo(copyOfGraph)
-					.search(startNode, goalNode, nodeSearched);
-
-			case ASTAR: return new AStarAlgo(copyOfGraph)
-					.search(startNode, goalNode, nodeSearched);
-		}
-		return null;
+		return algorithm.search(startNode, goalNode, nodeSearched);
 	}
 	
 
@@ -170,7 +159,7 @@ public class MapGraph {
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 2
-		return executeAlgorithm(start, goal, nodeSearched, Algorithm.BFS);
+		return executeAlgorithm(start, goal, nodeSearched, new BFSAlgo(new HashMap<>(graph)));
 	}
 
 
@@ -199,7 +188,7 @@ public class MapGraph {
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
 		// TODO: Implement this method in WEEK 3
-		return executeAlgorithm(start, goal, nodeSearched, Algorithm.DIJKSTRA);
+		return executeAlgorithm(start, goal, nodeSearched, new DijkstraAlgo(new HashMap<>(graph)));
 
 	}
 
@@ -232,7 +221,7 @@ public class MapGraph {
 											 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 3
-		return executeAlgorithm(start, goal, nodeSearched, Algorithm.ASTAR);
+		return executeAlgorithm(start, goal, nodeSearched, new AStarAlgo(new HashMap<>(graph)));
 	}
 
 	

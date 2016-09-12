@@ -5,8 +5,7 @@ import roadgraph.graphsenities.MapEdge;
 import roadgraph.graphsenities.MapNode;
 import roadgraph.searchalgorithms.api.SearchAlgo;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class AStarAlgo extends SearchAlgo {
@@ -16,7 +15,37 @@ public class AStarAlgo extends SearchAlgo {
 
     @Override
     public boolean findPath(MapNode startNode, MapNode goalNode, Consumer<GeographicPoint> nodeSearched, List<GeographicPoint> result) {
-        return false;
+        if (isInputValid(startNode, goalNode, nodeSearched, result)) {
+            constructPrimaryWeightedGraph(startNode);
+            Queue<MapNode> queue = new PriorityQueue<>();
+            Set<MapNode> visitedNodes = new HashSet<>();
+            Map<MapNode, MapNode> parentMap = new HashMap<>();
+            queue.add(startNode);
+            while (!queue.isEmpty()) {
+                MapNode currentNode = queue.remove();
+                nodeSearched.accept(currentNode.getLocation());
+                if (!visitedNodes.contains(currentNode)) {
+                    visitedNodes.add(currentNode);
+                    if (currentNode.equals(goalNode)) {
+                        constructPath(parentMap, goalNode, result);
+                        return true;
+                    }
+                    for (MapEdge edge : graph.get(currentNode)) {
+                        MapNode neighbour = edge.getOtherNode(currentNode);
+                        double newWeight = currentNode.getWeight() + edge.getLength() + neighbour.getDist(goalNode);
+                        if (!visitedNodes.contains(neighbour) && neighbour.getWeight() > newWeight) {
+                            neighbour.setWeight(newWeight);
+                            parentMap.put(neighbour, currentNode);
+                            queue.add(neighbour);
+                        }
+                    }
+
+                }
+            }
+            return false;
+        } else  {
+            return false;
+        }
     }
 
 }
