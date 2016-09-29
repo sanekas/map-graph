@@ -7,37 +7,6 @@
  */
 package application;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.web.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 import application.controllers.FetchController;
 import application.controllers.RouteController;
 import application.services.GeneralService;
@@ -48,6 +17,28 @@ import gmapsfx.javascript.object.GoogleMap;
 import gmapsfx.javascript.object.LatLong;
 import gmapsfx.javascript.object.MapOptions;
 import gmapsfx.javascript.object.MapTypeIdEnum;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MapApp extends Application
 implements MapComponentInitializedListener {
@@ -206,10 +197,8 @@ implements MapComponentInitializedListener {
 	}
 	/**
 	 * Setup layout and controls for Fetch tab
-	 * @param fetchTab
-	 * @param fetchButton
 	 * @param displayButton
-	 * @param tf
+	 * @param cb
 	 */
 	private VBox getFetchBox(Button displayButton, ComboBox<DataSet> cb) {
 		// add button to tab, rethink design and add V/HBox for content
@@ -237,7 +226,7 @@ implements MapComponentInitializedListener {
 	 * Setup layout of route tab and controls
 	 *
 	 * @param routeTab
-	 * @param box
+	 * @param fetchBox
 	 */
 	private void setupRouteTab(Tab routeTab, VBox fetchBox, Label startLabel, Label endLabel, Label pointLabel,
 			Button showButton, Button hideButton, Button resetButton, Button vButton, Button startButton,

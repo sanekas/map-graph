@@ -27,15 +27,12 @@ public class DijkstraAlgo extends SearchAlgo {
             Set<MapNode> visitedNodes = new HashSet<>();
             Map<MapNode, MapNode> parentMap = new HashMap<>();
             queue.add(startNode);
-            int counter = 0;
             while (!queue.isEmpty()) {
                 MapNode currentNode = queue.remove();
-                counter++;
-                nodeSearched.accept(currentNode.getLocation());
                 if (!visitedNodes.contains(currentNode)) {
+                    nodeSearched.accept(currentNode.getLocation());
                     visitedNodes.add(currentNode);
                     if (currentNode.equals(goalNode)) {
-                        System.out.println("Dijkstra Algorithm visit: " + counter);
                         constructPath(parentMap, goalNode, result);
                         return true;
                     }
