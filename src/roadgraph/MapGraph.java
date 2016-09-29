@@ -28,7 +28,6 @@ import java.util.function.Consumer;
  *
  */
 public class MapGraph {
-	//TODO: Add your member variables here in WEEK 2
 	private Map<MapNode, List<MapEdge>> graph;
 	private Map<GeographicPoint, MapNode> pointNodeMap;
 
@@ -40,7 +39,6 @@ public class MapGraph {
 	 */
 	public MapGraph()
 	{
-		// TODO: Implement in this constructor in WEEK 2
 		graph = new HashMap<>();
 		pointNodeMap = new HashMap<>();
 		numOfEdges = 0;
@@ -52,7 +50,6 @@ public class MapGraph {
 	 */
 	public int getNumVertices()
 	{
-		//TODO: Implement this method in WEEK 2
 		return graph.size();
 	}
 	
@@ -62,7 +59,6 @@ public class MapGraph {
 	 */
 	public Set<GeographicPoint> getVertices()
 	{
-		//TODO: Implement this method in WEEK 2
 		return pointNodeMap.keySet();
 	}
 	
@@ -72,7 +68,6 @@ public class MapGraph {
 	 */
 	public int getNumOfEdges()
 	{
-		//TODO: Implement this method in WEEK 2
 		return numOfEdges;
 	}
 
@@ -87,7 +82,6 @@ public class MapGraph {
 	 */
 	public boolean addVertex(GeographicPoint location)
 	{
-		// TODO: Implement this method in WEEK 2
 		if (location == null || pointNodeMap.containsKey(location)) {
 			return false;
 		} else {
@@ -112,7 +106,6 @@ public class MapGraph {
 	 */
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
-		//TODO: Implement this method in WEEK 2
 		if (!pointNodeMap.containsKey(from) || !pointNodeMap.containsKey(to) || from == null || to == null
 				|| roadType == null || length < 0) {
 			throw new IllegalArgumentException();
@@ -158,7 +151,6 @@ public class MapGraph {
 	public List<GeographicPoint> bfs(GeographicPoint start, 
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 2
 		return executeAlgorithm(start, goal, nodeSearched, new BFSAlgo(new HashMap<>(graph)));
 	}
 
@@ -187,7 +179,6 @@ public class MapGraph {
 	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
-		// TODO: Implement this method in WEEK 3
 		return executeAlgorithm(start, goal, nodeSearched, new DijkstraAlgo(new HashMap<>(graph)));
 
 	}
@@ -220,7 +211,6 @@ public class MapGraph {
 	public List<GeographicPoint> aStarSearch(GeographicPoint start, 
 											 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 3
 		return executeAlgorithm(start, goal, nodeSearched, new AStarAlgo(new HashMap<>(graph)));
 	}
 
@@ -281,7 +271,6 @@ public class MapGraph {
 
 		GeographicPoint start = new GeographicPoint(32.8648772, -117.2254046);
 		GeographicPoint end = new GeographicPoint(32.8660691, -117.217393);
-
 
 		List<GeographicPoint> route = theMap.dijkstra(start,end);
 		List<GeographicPoint> route2 = theMap.aStarSearch(start,end);

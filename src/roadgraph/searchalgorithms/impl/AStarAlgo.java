@@ -21,18 +21,21 @@ public class AStarAlgo extends SearchAlgo {
             Set<MapNode> visitedNodes = new HashSet<>();
             Map<MapNode, MapNode> parentMap = new HashMap<>();
             queue.add(startNode);
+            int counter = 0;
             while (!queue.isEmpty()) {
                 MapNode currentNode = queue.remove();
+                counter++;
                 nodeSearched.accept(currentNode.getLocation());
                 if (!visitedNodes.contains(currentNode)) {
                     visitedNodes.add(currentNode);
                     if (currentNode.equals(goalNode)) {
+                        System.out.println("A* Algorithm visit: " + counter);
                         constructPath(parentMap, goalNode, result);
                         return true;
                     }
                     for (MapEdge edge : graph.get(currentNode)) {
                         MapNode neighbour = edge.getOtherNode(currentNode);
-                        double newWeight = currentNode.getWeight() + edge.getLength() + neighbour.getDist(goalNode);
+                        double newWeight = currentNode.getWeight() + edge.getLength() + currentNode.getDist(goalNode);
                         if (!visitedNodes.contains(neighbour) && neighbour.getWeight() > newWeight) {
                             neighbour.setWeight(newWeight);
                             parentMap.put(neighbour, currentNode);

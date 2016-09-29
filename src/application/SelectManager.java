@@ -5,7 +5,6 @@
  */
 
 package application;
-import application.services.GeneralService;
 import geography.GeographicPoint;
 import gmapsfx.javascript.object.Marker;
 
@@ -41,7 +40,6 @@ public class SelectManager {
 
     public void setAndDisplayData(DataSet data) {
     	setDataSet(data);
-        //TODO - maybe if markerManager!= null?
         if(markerManager != null) {
             markerManager.displayDataSet();
         }
